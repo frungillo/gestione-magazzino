@@ -1,9 +1,17 @@
 import axios from 'axios';
 
-const API_URL = 'https://srvmicri.obbar.it/api';
+import { API_URL } from './base';
+
+const apiClient = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 
 export const getArticoli = async (token) => {
-  const response = await axios.get(`${API_URL}/Articolo/getArticolo`, {
+  const response = await apiClient.get(`/Articolo/getArticolo`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -11,4 +19,4 @@ export const getArticoli = async (token) => {
   return response.data;
 };
 
-// Definisci funzioni simili per le altre operazioni e entità
+// Definisci funzioni simili per le altre operazioni e entitï¿½

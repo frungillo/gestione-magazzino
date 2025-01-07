@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import { API_URL } from '../services/base';
+
 
 const Login = ({ history }) => {
   const [username, setUsername] = useState('');
@@ -10,7 +12,9 @@ const Login = ({ history }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://srvmicri.obbar.it/api/Utente/loginUtente', {
+      console.log("utente", username);
+      console.log("password", password);
+      const response = await axios.post(`${API_URL}/Utente/loginUtente`, {
         username,
         password,
       });
