@@ -2,12 +2,14 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { API_URL } from '../services/base';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = ({ history }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,11 +17,11 @@ const Login = ({ history }) => {
       console.log("utente", username);
       console.log("password", password);
       const response = await axios.post(`${API_URL}/Utente/loginUtente`, {
-        username,
-        password,
+        "username":username,
+        "password_hash":password,
       });
       login(response.data.token);
-      history.push('/dashboard');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Errore di autenticazione', error);
     }

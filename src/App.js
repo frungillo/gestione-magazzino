@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { AuthContext, AuthProvider } from './contexts/AuthContext';
 import  Login  from './components/login.js';
 import Dashboard from './components/Dashboard';
+import Articoli from './components/Articoli.js';
 
 // PrivateRoute per gestire le rotte protette
 const PrivateRoute = ({ element: Element, ...rest }) => {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           {/* Rotta protetta per il dashboard */}
           <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
+          <Route path="/articoli" element={<PrivateRoute element={Articoli} />} />
           {/* Rotta di fallback */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
