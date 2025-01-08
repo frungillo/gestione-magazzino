@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { getArticoli } from '../services/api';
+import { getArticoli, getGiacenza } from '../services/api';
+import '../styles/Articoli.css';
 
 const Articoli = () => {
   const [articoli, setArticoli] = useState([]);
@@ -10,9 +12,16 @@ const Articoli = () => {
     const fetchArticoli = async () => {
       try {
         const data = await getArticoli(authToken);
-        setArticoli(data);
+        // Aggiungi una proprietà "giacenza" per ogni articolo
+        const articoliConGiacenza = await Promise.all(
+          data.map(async (articolo) => {
+            const giacenza = await getGiacenza(articolo.id_articolo, authToken);
+            return { ...articolo, giacenza };
+          })
+        );
+        setArticoli(articoliConGiacenza);
       } catch (error) {
-        console.error('Errore nel recupero degli articoli:', error);
+        console.error('Errore nel recupero degli articoli o della giacenza:', error);
       }
     };
 
@@ -21,13 +30,19 @@ const Articoli = () => {
 
   return (
     <div className="container">
-      <h2>Gestione Articoli</h2>
+      <div className="header">
+        <h2>Gestione Articoli</h2>
+        <Link to="/dashboard" className="btn btn-primary dashboard-button">
+          Dashboard
+        </Link>
+      </div>
       <table className="table table-striped">
         <thead>
           <tr>
             <th>ID</th>
             <th>Descrizione</th>
             <th>Note</th>
+            <th>Giacenza</th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +51,7 @@ const Articoli = () => {
               <td>{articolo.id_articolo}</td>
               <td>{articolo.descrizione}</td>
               <td>{articolo.note}</td>
+              <td>{articolo.giacenza !== undefined ? articolo.giacenza : 'Caricamento...'}</td>
             </tr>
           ))}
         </tbody>
@@ -45,3 +61,5 @@ const Articoli = () => {
 };
 
 export default Articoli;
+
+

@@ -1,0 +1,46 @@
+.dashboard-container {
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.dashboard-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.dashboard-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.dashboard-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.dashboard-item:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.dashboard-icon {
+    margin-right: 10px;
+    font-size: 1.5rem;
+}

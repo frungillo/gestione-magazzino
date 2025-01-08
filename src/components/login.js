@@ -14,11 +14,9 @@ const Login = ({ history }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("utente", username);
-      console.log("password", password);
       const response = await axios.post(`${API_URL}/Utente/loginUtente`, {
-        "username":username,
-        "password_hash":password,
+        "username": username,
+        "password_hash": password,
       });
       login(response.data.token);
       navigate('/dashboard');
