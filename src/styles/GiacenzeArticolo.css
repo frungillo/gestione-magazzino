@@ -1,0 +1,44 @@
+.giacenze-popup {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem; /* Modifica la dimensione del testo */
+    font-weight: bold; /* Facoltativo, se vuoi mantenere il testo più visibile */
+    margin: 0; /* Riduci il margine se necessario */
+    text-align: center; /* Per centrare il testo */
+  }
+  
+  .close-button {
+    background: none;
+    border: red;
+    border-width: 1pt;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+  
+  .giacenze-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  .giacenze-table th,
+  .giacenze-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { getArticoli, getGiacenza } from '../services/api';
 import EditArticolo from './EditArticolo'; 
-//import GiacenzeArticolo from '.GiacenzeArticolo';
+import GiacenzeArticolo from './GiacenzeArticolo';
 import '../styles/Articoli.css';
 
 const Articoli = () => {
@@ -47,12 +47,14 @@ const Articoli = () => {
   };
 
   const handleGiacenzeArticolo = (articolo) => {
-    setSelectedArticolo(articolo); // Modifica articolo esistente
+    console.log("articolo",articolo);
+    setSelectedArticolo(articolo); 
     setShowGiacenzePopup(true);
   };
 
   const handlePopupClose = () => {
     setShowEditPopup(false);
+    setShowGiacenzePopup(false);
   };
 
   return (
@@ -78,6 +80,7 @@ const Articoli = () => {
             <th>ID</th>
             <th>Descrizione</th>
             <th>Note</th>
+            <th>Codice</th>
             <th>Giacenza Totale</th>
             <th>Azioni</th>
           </tr>
@@ -88,6 +91,7 @@ const Articoli = () => {
               <td>{articolo.id_articolo}</td>
               <td>{articolo.descrizione}</td>
               <td>{articolo.note}</td>
+              <td>{articolo.codice}</td>
               <td>{articolo.giacenza !== undefined ? articolo.giacenza : 'Caricamento...'}</td>
               <td>
                 <button
@@ -114,6 +118,13 @@ const Articoli = () => {
       </table>
       {showEditPopup && (
         <EditArticolo
+          articolo={selectedArticolo}
+          onClose={handlePopupClose}
+          authToken={authToken}
+        />
+      )}
+      {showGiacenzePopup && (
+        <GiacenzeArticolo
           articolo={selectedArticolo}
           onClose={handlePopupClose}
           authToken={authToken}

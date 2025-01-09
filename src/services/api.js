@@ -35,3 +35,18 @@ export const getGiacenza = async (id_articolo, token) => {
   }
 };
 
+export const getDettaglioGiacenza = async (id_articolo, token) => {
+  try {
+    console.log("id_articolo", id_articolo);
+    const response = await apiClient.get(`/Movimento/getDettaglioGiacenza/${id_articolo}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Errore durante il recupero della giacenza:", error);
+    throw error;
+  }
+};
+
