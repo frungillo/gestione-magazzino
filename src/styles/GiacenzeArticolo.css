@@ -22,12 +22,12 @@
   }
   
   .close-button {
-    background: none;
-    border: red;
-    border-width: 1pt;
-    font-size: 1.2em;
-    cursor: pointer;
-  }
+    background: none; /* Nessuno sfondo */
+    border: 1pt solid red; /* Bordo rosso di larghezza 1pt */
+    font-size: 1.2em; /* Dimensione del font */
+    cursor: pointer; /* Puntatore a forma di mano al passaggio del mouse */
+}
+
   
   .giacenze-table {
     width: 100%;
