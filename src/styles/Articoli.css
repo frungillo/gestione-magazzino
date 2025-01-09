@@ -110,3 +110,62 @@
 .error-modal .close-modal:hover {
   background-color: #f1b0b7;
 }
+.form {
+  border: 1px dotted black;
+  padding: 5px;
+  border-radius: 5px;
+}
+.form-group{
+  border-radius: 15px;
+}
+
+.articoli-selector {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.articoli-selector input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.articoli-list {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 5px;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+}
+
+.articoli-list li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.articoli-list li:hover {
+  background-color: #f1f1f1;
+}
+
+.articoli-list .selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.no-data {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+}

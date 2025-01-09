@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from '../services/base';
-import '../styles/Articoli.css';
 import ArticoloSelector from './ArticoloSelector';
 
 const Movimentazione = () => {
   const [movimentazioni, setMovimentazioni] = useState([]);
   const [articoloSelezionato, setArticoloSelezionato] = useState('');
+  const [caratteristiche, setCaratteristiche] = useState([]);
+  const [caratteristicaSelezionata, setCaratteristicaSelezionata] = useState('');
   const [quantita, setQuantita] = useState(0);
-  const [tipoMovimentazione, setTipoMovimentazione] = useState('1'); // Tipo movimento (1 = carico, 2 = scarico)
+  const [tipoMovimentazione, setTipoMovimentazione] = useState('1');
   const [note, setNote] = useState('');
   const [prezzo, setPrezzo] = useState(0);
   const [prezzoReale, setPrezzoReale] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    // Recupera la lista delle movimentazioni
     fetch(`${API_URL}/Movimento/getMovimento`)
       .then((response) => {
         if (!response.ok) {
@@ -28,11 +28,34 @@ const Movimentazione = () => {
       .catch((error) => setErrorMessage(error.message));
   }, []);
 
+  useEffect(() => {
+    if (articoloSelezionato) {
+      fetch(`${API_URL}/Caratteristica/getCaratteristicaByIdArticolo/${articoloSelezionato}`)
+        .then((response) => {
+          if (response.status == 404) {
+            response.data = 
+              [{
+                id_caratteristica:0,
+                taglia:"nessuna caratteristica",
+                colore:"0"
+              }];
+            return response.data;
+          }
+          if (!response.ok) {
+            throw new Error('Errore nel recupero delle caratteristiche.');
+          }
+          return response.json();
+        })
+        .then((data) => setCaratteristiche(data))
+        .catch((error) => setErrorMessage(error.message));
+    }
+  }, [articoloSelezionato]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const nuovaMovimentazione = {
       id_articolo: parseInt(articoloSelezionato),
-      id_caratteristica: null, // Modifica se richiesto
+      id_caratteristica: parseInt(caratteristicaSelezionata) || null,
       id_tipo: parseInt(tipoMovimentazione),
       quantita: parseInt(quantita),
       data: new Date().toISOString(),
@@ -41,7 +64,6 @@ const Movimentazione = () => {
       note,
     };
 
-    // Invia la nuova movimentazione al server
     fetch(`${API_URL}/Movimento/insertMovimento`, {
       method: 'POST',
       headers: {
@@ -60,6 +82,7 @@ const Movimentazione = () => {
       .then((data) => {
         setMovimentazioni([data, ...movimentazioni]);
         setArticoloSelezionato('');
+        setCaratteristicaSelezionata('');
         setQuantita(0);
         setNote('');
         setPrezzo(0);
@@ -77,7 +100,7 @@ const Movimentazione = () => {
         </div>
       )}
       <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
-      <form onSubmit={handleSubmit} className="header">
+      <form onSubmit={handleSubmit} className="form">
         <div className="form-group">
           <label>Articolo:</label>
           <ArticoloSelector
@@ -85,6 +108,23 @@ const Movimentazione = () => {
             setArticoloSelezionato={setArticoloSelezionato}
           />
         </div>
+        {caratteristiche.length > 0 && (
+          <div className="form-group">
+            <label>Caratteristica:</label>
+            <select
+              value={caratteristicaSelezionata}
+              onChange={(e) => setCaratteristicaSelezionata(e.target.value)}
+              required
+            >
+              <option value="">Seleziona una caratteristica</option>
+              {caratteristiche.map((caratteristica) => (
+                <option key={caratteristica.id_caratteristica} value={caratteristica.id_caratteristica}>
+                  {caratteristica.taglia}-{caratteristica.colore}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="form-group">
           <label>Quantità:</label>
           <input
