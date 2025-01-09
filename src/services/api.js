@@ -50,3 +50,31 @@ export const getDettaglioGiacenza = async (id_articolo, token) => {
   }
 };
 
+export const insertArticolo = async (nuovoArticolo, token) => {
+  try {
+    const response = await apiClient.post(`/Articolo/insertArticolo`, nuovoArticolo, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Errore durante l\'inserimento dell\'Articolo:', error);
+    throw error;
+  }
+};
+
+export const updateArticolo = async (updatedArticolo, token) => {
+
+  try {
+    const response = await apiClient.post(`/Articolo/modificaArticolo`, updatedArticolo, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Errore durante l\'aggiornamento dell\'articolo:', error);
+    throw error;
+  }
+};

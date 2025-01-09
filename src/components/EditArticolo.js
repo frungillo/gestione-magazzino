@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/EditArticolo.css';
+import { insertArticolo, updateArticolo } from '../services/api';
 
 const EditArticolo = ({ articolo, onClose, authToken }) => {
     const [descrizione, setDescrizione] = useState('');
     const [note, setNote] = useState('');
+    const [codice, setCodice] = useState(''); // Nuovo stato per il Codice Articolo
+
 
     useEffect(() => {
         if (articolo) {
             setDescrizione(articolo.descrizione);
             setNote(articolo.note);
+            setCodice(articolo.codice || ''); // Inizializza con il valore esistente o vuoto
         }
     }, [articolo]);
 
@@ -18,6 +22,7 @@ const EditArticolo = ({ articolo, onClose, authToken }) => {
         const articoloData = {
             descrizione,
             note,
+            codice, // Aggiungi il codice al payload
         };
 
         try {
@@ -55,6 +60,15 @@ const EditArticolo = ({ articolo, onClose, authToken }) => {
                 <h3>{articolo ? 'Modifica Articolo' : 'Aggiungi Articolo'}</h3>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
+                        <label>Codice Articolo</label>
+                        <input
+                            type="text"
+                            value={codice}
+                            onChange={(e) => setCodice(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
                         <label>Descrizione</label>
                         <input
                             type="text"
@@ -89,3 +103,4 @@ const EditArticolo = ({ articolo, onClose, authToken }) => {
 };
 
 export default EditArticolo;
+
