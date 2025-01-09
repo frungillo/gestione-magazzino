@@ -39,6 +39,17 @@
   color: black;
 }
 
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  color: #007bff;
+}
+
+.btn-icon:hover {
+  color: #0056b3;
+}
 .table {
   width: 100%;
   border-collapse: collapse;

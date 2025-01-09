@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faBoxes } from '@fortawesome/free-solid-svg-icons';
+import 'react-tooltip/dist/react-tooltip.css'; // Se usi react-tooltip
+import { Tooltip } from 'react-tooltip';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { getArticoli, getGiacenza } from '../services/api';
-import EditArticolo from './EditArticolo'; // Import del nuovo componente
+import EditArticolo from './EditArticolo'; 
 //import GiacenzeArticolo from '.GiacenzeArticolo';
 import '../styles/Articoli.css';
 
@@ -74,7 +78,7 @@ const Articoli = () => {
             <th>ID</th>
             <th>Descrizione</th>
             <th>Note</th>
-            <th>Giacenza</th>
+            <th>Giacenza Totale</th>
             <th>Azioni</th>
           </tr>
         </thead>
@@ -87,17 +91,22 @@ const Articoli = () => {
               <td>{articolo.giacenza !== undefined ? articolo.giacenza : 'Caricamento...'}</td>
               <td>
                 <button
-                  className="btn btn-warning edit-button"
+                  className="btn btn-icon"
                   onClick={() => handleEditArticolo(articolo)}
+                  data-tooltip-id={`tooltip-edit-${articolo.id_articolo}`}
                 >
-                  Modifica
+                  <FontAwesomeIcon icon={faEdit} />
                 </button>
+                <Tooltip id={`tooltip-edit-${articolo.id_articolo}`} content="Modifica" place="top" />
+                
                 <button
-                  className="btn btn-warning edit-button"
+                  className="btn btn-icon"
                   onClick={() => handleGiacenzeArticolo(articolo)}
+                  data-tooltip-id={`tooltip-giacenze-${articolo.id_articolo}`}
                 >
-                  Giacenze
+                  <FontAwesomeIcon icon={faBoxes} />
                 </button>
+                <Tooltip id={`tooltip-giacenze-${articolo.id_articolo}`} content="Giacenze" place="top" />
               </td>
             </tr>
           ))}
