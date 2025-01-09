@@ -11,11 +11,13 @@ const Movimentazione = () => {
   const [quantita, setQuantita] = useState(0);
   const [tipoMovimentazione, setTipoMovimentazione] = useState('1'); // Tipo movimento (1 = carico, 2 = scarico)
   const [note, setNote] = useState('');
+  const [prezzo, setPrezzo] = useState(0);
+  const [prezzoReale, setPrezzoReale] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     // Recupera la lista delle movimentazioni
-    fetch(`${API_URL}/api/Movimento/getMovimento`)
+    fetch(`${API_URL}/Movimento/getMovimento`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Errore nel recupero delle movimentazioni.');
@@ -30,13 +32,17 @@ const Movimentazione = () => {
     e.preventDefault();
     const nuovaMovimentazione = {
       id_articolo: parseInt(articoloSelezionato),
+      id_caratteristica: null, // Modifica se richiesto
       id_tipo: parseInt(tipoMovimentazione),
       quantita: parseInt(quantita),
+      data: new Date().toISOString(),
+      prezzo: parseFloat(prezzo),
+      prezzo_reale: parseFloat(prezzoReale),
       note,
     };
 
     // Invia la nuova movimentazione al server
-    fetch(`${API_URL}/api/Movimento/insertMovimento`, {
+    fetch(`${API_URL}/Movimento/insertMovimento`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,6 +62,8 @@ const Movimentazione = () => {
         setArticoloSelezionato('');
         setQuantita(0);
         setNote('');
+        setPrezzo(0);
+        setPrezzoReale(0);
       })
       .catch((error) => setErrorMessage(error.message));
   };
@@ -69,7 +77,7 @@ const Movimentazione = () => {
         </div>
       )}
       <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleSubmit} className="header">
         <div className="form-group">
           <label>Articolo:</label>
           <ArticoloSelector
@@ -99,26 +107,48 @@ const Movimentazione = () => {
           </select>
         </div>
         <div className="form-group">
+          <label>Prezzo:</label>
+          <input
+            type="number"
+            value={prezzo}
+            onChange={(e) => setPrezzo(Number(e.target.value))}
+            required
+            step="0.01"
+          />
+        </div>
+        <div className="form-group">
+          <label>Prezzo Reale:</label>
+          <input
+            type="number"
+            value={prezzoReale}
+            onChange={(e) => setPrezzoReale(Number(e.target.value))}
+            required
+            step="0.01"
+          />
+        </div>
+        <div className="form-group">
           <label>Note:</label>
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn">Conferma Movimentazione</button>
+        <button type="submit" className="btn btn-primary">Conferma Movimentazione</button>
       </form>
 
       <h3>Movimentazioni Recenti</h3>
       {movimentazioni.length === 0 ? (
-        <p className="no-data">Non ci sono movimentazioni recenti.</p>
+        <p className="table">Non ci sono movimentazioni recenti.</p>
       ) : (
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>Data</th>
               <th>Articolo</th>
               <th>Quantità</th>
               <th>Tipo</th>
+              <th>Prezzo</th>
+              <th>Prezzo Reale</th>
               <th>Note</th>
             </tr>
           </thead>
@@ -129,6 +159,8 @@ const Movimentazione = () => {
                 <td>{mov.id_articolo}</td>
                 <td>{mov.quantita}</td>
                 <td>{mov.id_tipo === 1 ? 'Carico' : 'Scarico'}</td>
+                <td>{mov.prezzo}</td>
+                <td>{mov.prezzo_reale}</td>
                 <td>{mov.note}</td>
               </tr>
             ))}
