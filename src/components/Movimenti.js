@@ -61,7 +61,7 @@ const Movimentazione = () => {
   };
 
   return (
-    <div className="movimentazione-container">
+    <div className="container">
       {errorMessage && (
         <div className="error-modal">
           <p>{errorMessage}</p>
@@ -69,7 +69,7 @@ const Movimentazione = () => {
         </div>
       )}
       <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
-      <form onSubmit={handleSubmit} className="movimentazione-form">
+      <form onSubmit={handleSubmit} className="form">
         <div className="form-group">
           <label>Articolo:</label>
           <ArticoloSelector
@@ -112,7 +112,7 @@ const Movimentazione = () => {
       {movimentazioni.length === 0 ? (
         <p className="no-data">Non ci sono movimentazioni recenti.</p>
       ) : (
-        <table className="movimentazioni-table">
+        <table className="table">
           <thead>
             <tr>
               <th>Data</th>
