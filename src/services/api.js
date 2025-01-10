@@ -9,6 +9,8 @@ const apiClient = axios.create({
   },
 });
 
+/**************************** ARTICOLO ****************************************/
+
 export const deleteArticolo = async (id_articolo, token) => {
   try {
     const response = await apiClient.delete(`/Articolo/deleteArticolo/${id_articolo}`, {
@@ -32,34 +34,6 @@ export const getArticoli = async (token) => {
 
 };
 
-export const getGiacenza = async (id_articolo, token) => {
-  try {
-    const response = await apiClient.get(`/Movimento/getGiacenza/${id_articolo}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Errore durante il recupero della giacenza:", error);
-    throw error;
-  }
-};
-
-export const getDettaglioGiacenza = async (id_articolo, token) => {
-  try {
-    console.log("id_articolo", id_articolo);
-    const response = await apiClient.get(`/Movimento/getDettaglioGiacenza/${id_articolo}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Errore durante il recupero della giacenza:", error);
-    throw error;
-  }
-};
 
 export const insertArticolo = async (nuovoArticolo, token) => {
   if (!nuovoArticolo) {
@@ -98,4 +72,57 @@ export const updateArticolo = async (id_articolo, updatedArticolo, token) => {
   }
 };
 
+// **************************************** GIACENZA ****************************************/
 
+export const getGiacenza = async (id_articolo, token) => {
+  try {
+    const response = await apiClient.get(`/Movimento/getGiacenza/${id_articolo}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Errore durante il recupero della giacenza:", error);
+    throw error;
+  }
+};
+
+export const getDettaglioGiacenza = async (id_articolo, token) => {
+  try {
+    console.log("id_articolo", id_articolo);
+    const response = await apiClient.get(`/Movimento/getDettaglioGiacenza/${id_articolo}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Errore durante il recupero della giacenza:", error);
+    throw error;
+  }
+};
+
+//**************************************** CARATTERISTICHE ARTICOLI **************************/
+
+export const getCaratteristiche = async (token) => {
+  const response = await apiClient.get(`/Caratteristica/getCaratteristica`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const deleteCaratteristica = async (id_caratteristica, token) => {
+  try {
+    const response = await apiClient.delete(`/Caratteristica/deleteCaratteristica${id_caratteristica}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }); return response.data;
+  } catch (error) {
+    console.error('Errore durante la cancellazione della Caratteristica:', error);
+    throw error;
+  }
+};
