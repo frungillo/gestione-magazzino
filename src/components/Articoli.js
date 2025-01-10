@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faBoxes, faTrash, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faBoxes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import 'react-tooltip/dist/react-tooltip.css'; // Se usi react-tooltip
 import { Tooltip } from 'react-tooltip';
 import { Link } from 'react-router-dom';
@@ -11,12 +11,13 @@ import GiacenzeArticolo from './GiacenzeArticolo';
 import { deleteArticolo } from '../services/api';
 import '../styles/Articoli.css';
 
-
 const Articoli = () => {
   const [articoli, setArticoli] = useState([]);
+  const [filteredArticoli, setFilteredArticoli] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showGiacenzePopup, setShowGiacenzePopup] = useState(false);
   const [selectedArticolo, setSelectedArticolo] = useState(null);
+  const [mostraSoloGiacenzaPositiva, setMostraSoloGiacenzaPositiva] = useState(false);
   const { authToken } = useContext(AuthContext);
 
   // Funzione per recuperare gli articoli
@@ -30,6 +31,7 @@ const Articoli = () => {
         })
       );
       setArticoli(articoliConGiacenza);
+      setFilteredArticoli(articoliConGiacenza); // Imposta gli articoli filtrati inizialmente
     } catch (error) {
       console.error('Errore nel recupero degli articoli o della giacenza:', error);
     }
@@ -39,6 +41,15 @@ const Articoli = () => {
   useEffect(() => {
     fetchArticoli();
   }, [authToken]);
+
+  // Effetto per aggiornare il filtro
+  useEffect(() => {
+    if (mostraSoloGiacenzaPositiva) {
+      setFilteredArticoli(articoli.filter((articolo) => articolo.giacenza > 0));
+    } else {
+      setFilteredArticoli(articoli);
+    }
+  }, [mostraSoloGiacenzaPositiva, articoli]);
 
   const handleAddArticolo = () => {
     setSelectedArticolo(null); // Aggiunta di un nuovo articolo
@@ -54,40 +65,32 @@ const Articoli = () => {
     setSelectedArticolo(articolo);
     setShowGiacenzePopup(true);
   };
+
   const handleDeleteArticolo = async (articolo) => {
     setSelectedArticolo(articolo);
     try {
-      // Recupera la giacenza dell'articolo
       const giacenza = await getGiacenza(articolo.id_articolo, authToken);
 
       if (giacenza === -1) {
-        // Cancellazione permessa
         const conferma = window.confirm(`Sei sicuro di voler cancellare l'articolo "${articolo.descrizione}"?`);
         if (conferma) {
-          await deleteArticolo(articolo.id_articolo, authToken); // Chiama il servizio di cancellazione
-          alert("Articolo cancellato con successo.");
-          fetchArticoli(); // Aggiorna la lista degli articoli
+          await deleteArticolo(articolo.id_articolo, authToken);
+          alert('Articolo cancellato con successo.');
+          fetchArticoli();
         }
       } else {
-        // Articolo con movimenti, non cancellabile
-        alert("Articolo con Movimenti. Impossibile cancellare.");
+        alert('Articolo con Movimenti. Impossibile cancellare.');
       }
     } catch (error) {
-      console.error("Errore durante la cancellazione dell'articolo:", error);
-      alert("Errore durante la cancellazione dell'articolo. Riprova più tardi.");
+      console.error('Errore durante la cancellazione dell\'articolo:', error);
+      alert('Errore durante la cancellazione dell\'articolo. Riprova più tardi.');
     }
-  };
-
-  const handleMovimentiArticolo = (articolo) => {
-    setSelectedArticolo(articolo);
-    //setShowGiacenzePopup(true);
-    // DA COMPLETARE
   };
 
   const handlePopupClose = () => {
     setShowEditPopup(false);
     setShowGiacenzePopup(false);
-    fetchArticoli(); // Aggiorna la lista degli articoli
+    fetchArticoli();
   };
 
   return (
@@ -95,6 +98,16 @@ const Articoli = () => {
       <div className="header">
         <h2>Gestione Articoli</h2>
         <div className="header-buttons">
+          <div className="filter-section">
+            <label>
+              <input
+                type="checkbox"
+                checked={mostraSoloGiacenzaPositiva}
+                onChange={(e) => setMostraSoloGiacenzaPositiva(e.target.checked)}
+              />
+              Mostra solo Articoli a Giacenza Positiva
+            </label>
+          </div>
           <button
             className="btn btn-success add-article-button"
             onClick={handleAddArticolo}
@@ -105,6 +118,7 @@ const Articoli = () => {
             Dashboard
           </Link>
         </div>
+
       </div>
       <table className="table table-striped">
         <thead>
@@ -118,7 +132,7 @@ const Articoli = () => {
           </tr>
         </thead>
         <tbody>
-          {articoli.map((articolo) => (
+          {filteredArticoli.map((articolo) => (
             <tr key={articolo.id_articolo}>
               <td>{articolo.id_articolo}</td>
               <td>{articolo.descrizione}</td>
@@ -151,14 +165,7 @@ const Articoli = () => {
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
                 <Tooltip id={`tooltip-elimina-${articolo.id_articolo}`} content="Elimina" place="top" />
-                <button
-                  className="btn btn-icon"
-                  onClick={() => handleMovimentiArticolo(articolo)}
-                  data-tooltip-id={`tooltip-movimenti-${articolo.id_articolo}`}
-                >
-                  <FontAwesomeIcon icon={faExchangeAlt} />
-                </button>
-                <Tooltip id={`tooltip-movimenti-${articolo.id_articolo}`} content="Movimenti" place="top" />
+
               </td>
             </tr>
           ))}
@@ -183,6 +190,7 @@ const Articoli = () => {
 };
 
 export default Articoli;
+
 
 
 
