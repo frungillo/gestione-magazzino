@@ -90,7 +90,6 @@ export const getGiacenza = async (id_articolo, token) => {
 
 export const getDettaglioGiacenza = async (id_articolo, token) => {
   try {
-    console.log("id_articolo", id_articolo);
     const response = await apiClient.get(`/Movimento/getDettaglioGiacenza/${id_articolo}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -124,5 +123,42 @@ export const deleteCaratteristica = async (id_caratteristica, token) => {
   } catch (error) {
     console.error('Errore durante la cancellazione della Caratteristica:', error);
     throw error;
+  }
+};
+
+export const insertCaratteristica = async (nuovaCaratteristica, token) => {
+  if (!nuovaCaratteristica) {
+    throw new Error("I dati della nuova Caratteristica non sono validi.");
+  }
+
+  try {
+    const response = await apiClient.post('/Caratteristica/insertCaratteristica', nuovaCaratteristica, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Errore durante l\'inserimento della Caratteristica:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Errore durante l\'inserimento della Caratteristica');
+  }
+};
+
+export const updateCaratteristica = async (id_caratteristica, updatedCaratteristica, token) => {
+  console.log("updatedCaratteristica", updatedCaratteristica);
+  if (!updatedCaratteristica || !id_caratteristica) {
+    throw new Error("I dati dell'articolo da aggiornare non sono validi o manca l'ID.");
+  }
+
+  try {
+    const response = await apiClient.put(`/Caratteristica/modificaCaratteristica/${id_caratteristica}`, updatedCaratteristica, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Errore durante l\'aggiornamento della Caratteristica:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Errore durante l\'aggiornamento della Caratteristica');
   }
 };
