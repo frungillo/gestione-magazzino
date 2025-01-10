@@ -5,14 +5,13 @@ import { insertArticolo, updateArticolo } from '../services/api';
 const EditArticolo = ({ articolo, onClose, authToken }) => {
     const [descrizione, setDescrizione] = useState('');
     const [note, setNote] = useState('');
-    const [codice, setCodice] = useState(''); // Nuovo stato per il Codice Articolo
-
+    const [codice, setCodice] = useState('');
 
     useEffect(() => {
         if (articolo) {
             setDescrizione(articolo.descrizione);
             setNote(articolo.note);
-            setCodice(articolo.codice || ''); // Inizializza con il valore esistente o vuoto
+            setCodice(articolo.codice || '');
         }
     }, [articolo]);
 
@@ -22,35 +21,20 @@ const EditArticolo = ({ articolo, onClose, authToken }) => {
         const articoloData = {
             descrizione,
             note,
-            codice, // Aggiungi il codice al payload
+            codice,
         };
-
         try {
             if (articolo) {
                 // Modifica articolo esistente
-                await fetch(`/api/articoli/${articolo.id_articolo}`, {
-                    method: 'PUT',
-                    headers: {
-                        Authorization: `Bearer ${authToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(articoloData),
-                });
+                await updateArticolo(articolo.id_articolo, articoloData, authToken);
             } else {
                 // Aggiungi nuovo articolo
-                await fetch(`/api/articoli`, {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${authToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(articoloData),
-                });
+                await insertArticolo(articoloData, authToken);
             }
 
             onClose();
         } catch (error) {
-            console.error('Errore durante il salvataggio dell\'articolo:', error);
+            console.error("Errore durante il salvataggio dell'articolo:", error);
         }
     };
 
@@ -103,4 +87,5 @@ const EditArticolo = ({ articolo, onClose, authToken }) => {
 };
 
 export default EditArticolo;
+
 
