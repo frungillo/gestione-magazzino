@@ -10,7 +10,8 @@ const Movimentazione = () => {
   const [caratteristiche, setCaratteristiche] = useState([]);
   const [caratteristicaSelezionata, setCaratteristicaSelezionata] = useState('');
   const [quantita, setQuantita] = useState(0);
-  const [tipoMovimentazione, setTipoMovimentazione] = useState('1');
+  const [tipoMovimentazione, setTipoMovimentazione] = useState([]);
+  const [tipoMovimentoSelezionato, setTipoMovimentoSelezionato] = useState('');
   const [note, setNote] = useState('');
   const [prezzo, setPrezzo] = useState(0);
   const [prezzoReale, setPrezzoReale] = useState(0);
@@ -29,8 +30,29 @@ const Movimentazione = () => {
   }, []);
 
   useEffect(() => {
+    fetch(`${API_URL}/TipoMovimento/getTipoMovimento`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Errore nel recupero delle tipi movimento.');
+        }
+        return response.json();
+      })
+      .then((data) => setTipoMovimentazione(data))
+      .catch((error) => setErrorMessage(error.message));
+  }, []);
+
+  useEffect(() => {
+    if(!tipoMovimentoSelezionato && articoloSelezionato) {
+      setErrorMessage("Selezionare il tipo di movimento");
+      return;
+    }
     if (articoloSelezionato) {
-      fetch(`${API_URL}/Caratteristica/getCaratteristicaByIdArticolo/${articoloSelezionato}`)
+    var stringaFetch = `${API_URL}/Caratteristica/getCaratteristicaByIdArticolo/${articoloSelezionato}`;
+      var obj = JSON.parse(tipoMovimentoSelezionato);
+      if(obj.segno){
+        stringaFetch = `${API_URL}/Caratteristica/getCaratteristica`; 
+      }
+      fetch(stringaFetch)
         .then((response) => {
           if (response.status == 404) {
             response.data = 
@@ -49,7 +71,7 @@ const Movimentazione = () => {
         .then((data) => setCaratteristiche(data))
         .catch((error) => setErrorMessage(error.message));
     }
-  }, [articoloSelezionato]);
+  }, [articoloSelezionato, tipoMovimentoSelezionato]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -126,7 +148,7 @@ const Movimentazione = () => {
           </div>
         )}
         <div className="form-group">
-          <label>Quantità:</label>
+          <label>Quantita:</label>
           <input
             type="number"
             value={quantita}
@@ -138,12 +160,14 @@ const Movimentazione = () => {
         <div className="form-group">
           <label>Tipo di Movimentazione:</label>
           <select
-            value={tipoMovimentazione}
-            onChange={(e) => setTipoMovimentazione(e.target.value)}
+            value={tipoMovimentoSelezionato}
+            onChange={(e) => setTipoMovimentoSelezionato(e.target.value)}
             required
           >
-            <option value="1">Carico</option>
-            <option value="2">Scarico</option>
+            <option value="">Selezionare un operazione</option>
+            {tipoMovimentazione.map((tipo) =>(
+              <option key={tipo.id_tipo_movimento} value={JSON.stringify(tipo)}>{tipo.descrizione}</option>
+            ))}
           </select>
         </div>
         <div className="form-group">
@@ -185,7 +209,7 @@ const Movimentazione = () => {
             <tr>
               <th>Data</th>
               <th>Articolo</th>
-              <th>Quantità</th>
+              <th>Quantita</th>
               <th>Tipo</th>
               <th>Prezzo</th>
               <th>Prezzo Reale</th>
