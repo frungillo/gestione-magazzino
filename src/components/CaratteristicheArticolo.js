@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip } from 'react-tooltip';
 import { AuthContext } from '../contexts/AuthContext';
-import { getCaratteristiche, deleteCaratteristica } from '../services/api';
+import { getCaratteristiche, deleteCaratteristica, isUsedCaratteristica } from '../services/api';
 import EditCaratteristica from './EditCaratteristica';
 import { Link } from 'react-router-dom';
 import '../styles/CaratteristicheArticolo.css';
@@ -38,18 +38,28 @@ const CaratteristicheArticolo = () => {
         setShowEditPopup(true);
     };
 
-    const handleDeleteCaratteristica = async (id) => {
-        const conferma = window.confirm('Sei sicuro di voler eliminare questa caratteristica?');
-        if (conferma) {
-            try {
-                await deleteCaratteristica(id, authToken);
-                alert('Caratteristica eliminata con successo.');
-                fetchCaratteristiche();
-            } catch (error) {
-                console.error("Errore durante l'eliminazione della caratteristica:", error);
-                alert('Errore durante l\'eliminazione. Riprova più tardi.');
+    const handleDeleteCaratteristica = async (caratteristica) => {
+
+        setSelectedCaratteristica(caratteristica);
+        try {
+            const isUsed = await isUsedCaratteristica(caratteristica.id_caratteristica, authToken);
+            if (!isUsed) {
+                const conferma = window.confirm(`Sei sicuro di voler cancellare la caratteristica "${caratteristica.taglia}"?`);
+                if (conferma) {
+                    await deleteCaratteristica(caratteristica.id_caratteristica, authToken);
+                    alert('caratteristica cancellata con successo.');
+                    fetchCaratteristiche();
+                }
             }
+
+            else {
+                alert('Caratteristica con Movimenti. Impossibile cancellare.');
+            }
+        } catch (error) {
+            console.error('Errore durante la cancellazione della caratteristica:', error);
+            alert('Errore durante la cancellazione della caratteristica. Riprova più tardi.');
         }
+
     };
 
     const handlePopupClose = () => {
@@ -103,7 +113,7 @@ const CaratteristicheArticolo = () => {
                                 />
                                 <button
                                     className="btn btn-icon"
-                                    onClick={() => handleDeleteCaratteristica(caratteristica.id_caratteristica)}
+                                    onClick={() => handleDeleteCaratteristica(caratteristica)}
                                     data-tooltip-id={`tooltip-delete-${caratteristica.id_caratteristica}`}
                                 >
                                     <FontAwesomeIcon icon={faTrash} />

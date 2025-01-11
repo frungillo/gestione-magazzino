@@ -27,7 +27,7 @@ const EditCaratteristica = ({ caratteristica, onClose, authToken }) => {
         try {
             if (caratteristica) {
                 // Modifica caratteristica esistente
-                await updateCaratteristica(caratteristica.id, caratteristicaData, authToken);
+                await updateCaratteristica(caratteristica.id_caratteristica, caratteristicaData, authToken);
             } else {
                 // Aggiungi nuova caratteristica
                 await insertCaratteristica(caratteristicaData, authToken);

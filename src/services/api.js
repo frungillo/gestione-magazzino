@@ -104,6 +104,22 @@ export const getDettaglioGiacenza = async (id_articolo, token) => {
 
 //**************************************** CARATTERISTICHE ARTICOLI **************************/
 
+export const isUsedCaratteristica = async (id_caratteristica, token) => {
+  try {
+    const response = await apiClient.get(`/Caratteristica/isUsedCaratteristica/${id_caratteristica}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error('Errore durante la verifica: ', error);
+    throw error;
+
+  }
+};
+
 export const getCaratteristiche = async (token) => {
   const response = await apiClient.get(`/Caratteristica/getCaratteristica`, {
     headers: {
@@ -115,7 +131,7 @@ export const getCaratteristiche = async (token) => {
 
 export const deleteCaratteristica = async (id_caratteristica, token) => {
   try {
-    const response = await apiClient.delete(`/Caratteristica/deleteCaratteristica${id_caratteristica}`, {
+    const response = await apiClient.delete(`/Caratteristica/deleteCaratteristica/${id_caratteristica}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -127,6 +143,7 @@ export const deleteCaratteristica = async (id_caratteristica, token) => {
 };
 
 export const insertCaratteristica = async (nuovaCaratteristica, token) => {
+
   if (!nuovaCaratteristica) {
     throw new Error("I dati della nuova Caratteristica non sono validi.");
   }
@@ -145,7 +162,7 @@ export const insertCaratteristica = async (nuovaCaratteristica, token) => {
 };
 
 export const updateCaratteristica = async (id_caratteristica, updatedCaratteristica, token) => {
-  console.log("updatedCaratteristica", updatedCaratteristica);
+  console.log("updated id_caratteristica", id_caratteristica);
   if (!updatedCaratteristica || !id_caratteristica) {
     throw new Error("I dati dell'articolo da aggiornare non sono validi o manca l'ID.");
   }
@@ -160,5 +177,21 @@ export const updateCaratteristica = async (id_caratteristica, updatedCaratterist
   } catch (error) {
     console.error('Errore durante l\'aggiornamento della Caratteristica:', error.response?.data || error.message);
     throw new Error(error.response?.data?.message || 'Errore durante l\'aggiornamento della Caratteristica');
+  }
+};
+
+/*********************************** MOVIMENTI *******************************************/
+
+export const getMovimentiArticolo = async (id_articolo, token) => {
+  try {
+    const response = await apiClient.get(`/Movimento/getMovimentiArticolo/${id_articolo}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Errore durante il recupero deI Movimenti Articolo:", error);
+    throw error;
   }
 };
