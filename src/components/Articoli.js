@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faBoxes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import 'react-tooltip/dist/react-tooltip.css'; // Se usi react-tooltip
+import { faEdit, faBoxes, faTrash, faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import 'react-tooltip/dist/react-tooltip.css';
+import Barcode from 'react-barcode';
 import { Tooltip } from 'react-tooltip';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { getArticoli, getGiacenza } from '../services/api';
+import { getArticoli, getGiacenza, deleteArticolo } from '../services/api';
 import EditArticolo from './EditArticolo';
 import GiacenzeArticolo from './GiacenzeArticolo';
-import { deleteArticolo } from '../services/api';
+import MovimentiArticolo from './MovimentiArticolo'; // Nuovo componente
 import '../styles/Articoli.css';
 
 const Articoli = () => {
@@ -16,11 +17,11 @@ const Articoli = () => {
   const [filteredArticoli, setFilteredArticoli] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showGiacenzePopup, setShowGiacenzePopup] = useState(false);
+  const [showMovimentiPopup, setShowMovimentiPopup] = useState(false); // Stato per il popup dei movimenti
   const [selectedArticolo, setSelectedArticolo] = useState(null);
   const [mostraSoloGiacenzaPositiva, setMostraSoloGiacenzaPositiva] = useState(false);
   const { authToken } = useContext(AuthContext);
 
-  // Funzione per recuperare gli articoli
   const fetchArticoli = async () => {
     try {
       const data = await getArticoli(authToken);
@@ -31,18 +32,16 @@ const Articoli = () => {
         })
       );
       setArticoli(articoliConGiacenza);
-      setFilteredArticoli(articoliConGiacenza); // Imposta gli articoli filtrati inizialmente
+      setFilteredArticoli(articoliConGiacenza);
     } catch (error) {
       console.error('Errore nel recupero degli articoli o della giacenza:', error);
     }
   };
 
-  // Effetto per caricare gli articoli inizialmente
   useEffect(() => {
     fetchArticoli();
   }, [authToken]);
 
-  // Effetto per aggiornare il filtro
   useEffect(() => {
     if (mostraSoloGiacenzaPositiva) {
       setFilteredArticoli(articoli.filter((articolo) => articolo.giacenza > 0));
@@ -52,18 +51,24 @@ const Articoli = () => {
   }, [mostraSoloGiacenzaPositiva, articoli]);
 
   const handleAddArticolo = () => {
-    setSelectedArticolo(null); // Aggiunta di un nuovo articolo
+    setSelectedArticolo(null);
     setShowEditPopup(true);
   };
 
   const handleEditArticolo = (articolo) => {
-    setSelectedArticolo(articolo); // Modifica articolo esistente
+    setSelectedArticolo(articolo);
     setShowEditPopup(true);
   };
 
   const handleGiacenzeArticolo = (articolo) => {
     setSelectedArticolo(articolo);
     setShowGiacenzePopup(true);
+  };
+
+  const handleMovimentiArticolo = (articolo) => {
+    setSelectedArticolo(articolo);
+    console.log("movimentoarticolo", articolo);
+    setShowMovimentiPopup(true); // Mostra il popup dei movimenti
   };
 
   const handleDeleteArticolo = async (articolo) => {
@@ -87,10 +92,19 @@ const Articoli = () => {
     }
   };
 
-  const handlePopupClose = () => {
+  const handlePopupClose = (updatedArticolo) => {
+    if (updatedArticolo) {
+      setArticoli((prev) =>
+        prev.map((articolo) =>
+          articolo.id_articolo === updatedArticolo.id_articolo
+            ? updatedArticolo
+            : articolo
+        )
+      );
+    }
     setShowEditPopup(false);
     setShowGiacenzePopup(false);
-    fetchArticoli();
+    setShowMovimentiPopup(false); // Chiude il popup dei movimenti
   };
 
   return (
@@ -118,7 +132,6 @@ const Articoli = () => {
             Dashboard
           </Link>
         </div>
-
       </div>
       <table className="table table-striped">
         <thead>
@@ -127,6 +140,7 @@ const Articoli = () => {
             <th>Descrizione</th>
             <th>Note</th>
             <th>Codice</th>
+            <th>BarCode</th>
             <th>Giacenza Totale</th>
             <th>Azioni</th>
           </tr>
@@ -138,6 +152,16 @@ const Articoli = () => {
               <td>{articolo.descrizione}</td>
               <td>{articolo.note}</td>
               <td>{articolo.codice}</td>
+              <td>
+                {articolo.codice && (
+                  <Barcode
+                    value={articolo.codice}
+                    width={2}
+                    height={40}
+                    displayValue={true}
+                  />
+                )}
+              </td>
               <td>{articolo.giacenza !== undefined ? articolo.giacenza : 'Caricamento...'}</td>
               <td>
                 <button
@@ -157,6 +181,7 @@ const Articoli = () => {
                   <FontAwesomeIcon icon={faBoxes} />
                 </button>
                 <Tooltip id={`tooltip-giacenze-${articolo.id_articolo}`} content="Giacenze" place="top" />
+
                 <button
                   className="btn btn-icon"
                   onClick={() => handleDeleteArticolo(articolo)}
@@ -166,6 +191,14 @@ const Articoli = () => {
                 </button>
                 <Tooltip id={`tooltip-elimina-${articolo.id_articolo}`} content="Elimina" place="top" />
 
+                <button
+                  className="btn btn-icon"
+                  onClick={() => handleMovimentiArticolo(articolo)}
+                  data-tooltip-id={`tooltip-movimenti-${articolo.id_articolo}`}
+                >
+                  <FontAwesomeIcon icon={faRightLeft} />
+                </button>
+                <Tooltip id={`tooltip-movimenti-${articolo.id_articolo}`} content="Movimenti" place="top" />
               </td>
             </tr>
           ))}
@@ -185,11 +218,19 @@ const Articoli = () => {
           authToken={authToken}
         />
       )}
+      {showMovimentiPopup && (
+        <MovimentiArticolo
+          articolo={selectedArticolo}
+          onClose={handlePopupClose}
+          authToken={authToken}
+        />
+      )}
     </div>
   );
 };
 
 export default Articoli;
+
 
 
 

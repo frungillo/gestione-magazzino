@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getDettaglioGiacenza} from '../services/api'; // Funzione API per recuperare le giacenze per caratteristica
+import { getDettaglioGiacenza } from '../services/api'; // Funzione API per recuperare le giacenze per caratteristica
 import '../styles/GiacenzeArticolo.css';
 
 const GiacenzeArticolo = ({ articolo, onClose, authToken }) => {
@@ -8,7 +8,6 @@ const GiacenzeArticolo = ({ articolo, onClose, authToken }) => {
   useEffect(() => {
     const fetchGiacenze = async () => {
       try {
-        console.log("from popup",articolo.id_articolo)
         const data = await getDettaglioGiacenza(articolo.id_articolo, authToken);
         setGiacenze(data);
       } catch (error) {

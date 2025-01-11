@@ -21,6 +21,7 @@ const Dashboard = () => {
           <FontAwesomeIcon icon={faTags} className="dashboard-icon" />
           <span>Gestione Caratteristiche</span>
         </Link>
+
       </div>
     </div>
   );
