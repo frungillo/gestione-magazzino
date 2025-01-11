@@ -19,7 +19,7 @@ const ArticoloSelector = ({ articoloSelezionato, setArticoloSelezionato }) => {
   }, []);
 
   const articoliFiltrati = articoli.filter((articolo) =>
-    articolo.descrizione.toLowerCase().includes(filtro.toLowerCase())
+    articolo.descrizione.toLowerCase().includes(filtro.toLowerCase())||articolo.codice.toLowerCase() == filtro.toLowerCase()
   );
 
   return (

@@ -123,6 +123,19 @@ const Movimentazione = () => {
       )}
       <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
       <form onSubmit={handleSubmit} className="form">
+      <div className="form-group">
+          <label>Tipo di Movimentazione:</label>
+          <select
+            value={tipoMovimentoSelezionato}
+            onChange={(e) => setTipoMovimentoSelezionato(e.target.value)}
+            required
+          >
+            <option value="">Selezionare un operazione</option>
+            {tipoMovimentazione.map((tipo) =>(
+              <option key={tipo.id_tipo_movimento} value={JSON.stringify(tipo)}>{tipo.descrizione}</option>
+            ))}
+          </select>
+        </div>
         <div className="form-group">
           <label>Articolo:</label>
           <ArticoloSelector
@@ -157,19 +170,7 @@ const Movimentazione = () => {
             min="1"
           />
         </div>
-        <div className="form-group">
-          <label>Tipo di Movimentazione:</label>
-          <select
-            value={tipoMovimentoSelezionato}
-            onChange={(e) => setTipoMovimentoSelezionato(e.target.value)}
-            required
-          >
-            <option value="">Selezionare un operazione</option>
-            {tipoMovimentazione.map((tipo) =>(
-              <option key={tipo.id_tipo_movimento} value={JSON.stringify(tipo)}>{tipo.descrizione}</option>
-            ))}
-          </select>
-        </div>
+        
         <div className="form-group">
           <label>Prezzo:</label>
           <input
