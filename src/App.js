@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import Articoli from './components/Articoli.js';
 import Movimentazione from './components/Movimenti.js';
 import CaratteristicheArticolo from './components/CaratteristicheArticolo.js';
+import TipoMovimento from './components/TipoMovimento.js';
 
 // PrivateRoute per gestire le rotte protette
 const PrivateRoute = ({ element: Element, ...rest }) => {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/articoli" element={<PrivateRoute element={Articoli} />} />
           <Route path="/movimenti" element={<PrivateRoute element={Movimentazione} />} />
           <Route path="/caratteristiche" element={<PrivateRoute element={CaratteristicheArticolo} />} />
+          <Route path="/tipomovimento" element={<PrivateRoute element={TipoMovimento} />} />
           {/* Rotta di fallback */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>

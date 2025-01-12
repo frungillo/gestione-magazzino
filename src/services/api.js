@@ -195,3 +195,15 @@ export const getMovimentiArticolo = async (id_articolo, token) => {
     throw error;
   }
 };
+
+/***************************** TIPO MOVIMENTI *******************************************/
+
+export const getTipoMovimento = async (token) => {
+  const response = await apiClient.get(`/TipoMovimento/getTipoMovimento`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+
+};

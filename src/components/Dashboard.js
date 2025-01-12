@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Dashboard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBox, faExchangeAlt, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsTurnToDots, faBox, faExchangeAlt, faTags } from '@fortawesome/free-solid-svg-icons';
 
 const Dashboard = () => {
   return (
@@ -20,6 +20,10 @@ const Dashboard = () => {
         <Link to="/caratteristiche" className="dashboard-item">
           <FontAwesomeIcon icon={faTags} className="dashboard-icon" />
           <span>Gestione Caratteristiche</span>
+        </Link>
+        <Link to="/tipomovimento" className="dashboard-item">
+          <FontAwesomeIcon icon={faArrowsTurnToDots} className="dashboard-icon" />
+          <span>Tipo Movimento</span>
         </Link>
 
       </div>
