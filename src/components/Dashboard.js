@@ -7,7 +7,7 @@ import { faArrowsTurnToDots, faBox, faExchangeAlt, faTags } from '@fortawesome/f
 const Dashboard = () => {
   return (
     <div className="dashboard-container">
-      <h2 className="dashboard-title">Dashboard</h2>
+      <h2 className="dashboard-title">Magazzino Micri - Dashboard</h2>
       <div className="dashboard-menu">
         <Link to="/articoli" className="dashboard-item">
           <FontAwesomeIcon icon={faBox} className="dashboard-icon" />
