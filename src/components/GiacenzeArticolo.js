@@ -22,6 +22,7 @@ const GiacenzeArticolo = ({ articolo, onClose, authToken }) => {
     <div className="giacenze-popup">
       <div className="popup-header">
         <h3 className="popup-header">Giacenze per {articolo.descrizione}</h3>
+        <span> </span>
         <button className="close-button" onClick={onClose}>X</button>
       </div>
       <table className="table giacenze-table">
