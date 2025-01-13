@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from '../services/base';
 import ArticoloSelector from './ArticoloSelector';
+import { Link } from 'react-router-dom';
 
 const Movimentazione = () => {
   const [movimentazioni, setMovimentazioni] = useState([]);
@@ -16,6 +17,8 @@ const Movimentazione = () => {
   const [prezzo, setPrezzo] = useState(0);
   const [prezzoReale, setPrezzoReale] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
+  const [descrizioniArticoli, setDescrizioniArticoli] = useState({});
+  const [descrizioniCaratteristiche, setDescrizioniCaratteristiche] = useState({});
 
   useEffect(() => {
     fetch(`${API_URL}/Movimento/getMovimento`)
@@ -54,7 +57,7 @@ const Movimentazione = () => {
       }
       fetch(stringaFetch)
         .then((response) => {
-          if (response.status == 404) {
+          if (response.status === 404) {
             response.data = 
               [{
                 id_caratteristica:0,
@@ -73,12 +76,41 @@ const Movimentazione = () => {
     }
   }, [articoloSelezionato, tipoMovimentoSelezionato]);
 
+  useEffect(() => {
+    // Recuperiamo le descrizioni mancanti all'inizio (opzionale)
+    const articoliMancanti = movimentazioni
+      .map((mov) => mov.id_articolo)
+      .filter((id) => !descrizioniArticoli[id]);
+
+    articoliMancanti.forEach((id) => {
+      decodeArticolo(id);
+    });
+  }, [movimentazioni]);
+
+  useEffect(() => {
+    // Recuperiamo le descrizioni mancanti all'inizio (opzionale)
+    const caretteristicheMancanti = movimentazioni
+      .map((mov) => mov.id_caratteristica)
+      .filter((id) => !descrizioniCaratteristiche[id]);
+
+      caretteristicheMancanti.forEach((id) => {
+      decodeCaratteristica(id);
+    });
+  }, [movimentazioni]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    var obj="";
+    try{
+      obj = JSON.parse(tipoMovimentoSelezionato);
+    } catch(error) {
+      setErrorMessage("Tipo movimento non trovato");
+      return;
+    }
     const nuovaMovimentazione = {
       id_articolo: parseInt(articoloSelezionato),
       id_caratteristica: parseInt(caratteristicaSelezionata) || null,
-      id_tipo: parseInt(tipoMovimentazione),
+      id_tipo: parseInt(obj.id_tipo_movimento),
       quantita: parseInt(quantita),
       data: new Date().toISOString(),
       prezzo: parseFloat(prezzo),
@@ -113,6 +145,61 @@ const Movimentazione = () => {
       .catch((error) => setErrorMessage(error.message));
   };
 
+  const decodeArticolo = async (id_articolo) => {
+    if (descrizioniArticoli[id_articolo]) {
+      // Se la descrizione è già in stato, la restituiamo
+      return descrizioniArticoli[id_articolo];
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/Articolo/getArticolo/${id_articolo}`);
+      if (!response.ok) {
+        throw new Error('Errore nel recupero articolo.');
+      }
+      const obj = await response.json();
+      const descrizione = `${obj.descrizione} [${obj.id_articolo}]`;
+
+      // Aggiorniamo lo stato con la nuova descrizione
+      setDescrizioniArticoli((prev) => ({
+        ...prev,
+        [id_articolo]: descrizione,
+      }));
+
+      return descrizione;
+    } catch (error) {
+      setErrorMessage(error.message);
+      return "";
+    }
+  };
+
+  const decodeCaratteristica = async (id_caratteristica) => {
+    if (descrizioniCaratteristiche[id_caratteristica]) {
+      // Se la descrizione è già in stato, la restituiamo
+      return descrizioniCaratteristiche[id_caratteristica];
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/Caratteristica/getCaratteristica/${id_caratteristica}`);
+      if (!response.ok) {
+        throw new Error('Errore nel recupero caratteristica.');
+      }
+      const obj = await response.json();
+      const descrizione = `${obj.taglia}/${obj.colore}`;
+
+      // Aggiorniamo lo stato con la nuova descrizione
+      setDescrizioniCaratteristiche((prev) => ({
+        ...prev,
+        [id_caratteristica]: descrizione,
+      }));
+
+      return descrizione;
+    } catch (error) {
+      setErrorMessage(error.message);
+      return "";
+    }
+  };
+
+
   return (
     <div className="container">
       {errorMessage && (
@@ -122,6 +209,9 @@ const Movimentazione = () => {
         </div>
       )}
       <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
+      <Link to="/dashboard" className="btn btn-primary dashboard-button">
+            Dashboard
+          </Link>
       <form onSubmit={handleSubmit} className="form">
       <div className="form-group">
           <label>Tipo di Movimentazione:</label>
@@ -210,6 +300,7 @@ const Movimentazione = () => {
             <tr>
               <th>Data</th>
               <th>Articolo</th>
+              <th>Taglia/Colore</th>
               <th>Quantita</th>
               <th>Tipo</th>
               <th>Prezzo</th>
@@ -220,8 +311,9 @@ const Movimentazione = () => {
           <tbody>
             {movimentazioni.map((mov) => (
               <tr key={mov.id_movimento}>
-                <td>{new Date(mov.data).toLocaleString()}</td>
-                <td>{mov.id_articolo}</td>
+                <td>{new Date(mov.data).toLocaleDateString()}</td>
+                <td>{descrizioniArticoli[mov.id_articolo] || "Caricamento..."}</td>
+                <td>{descrizioniCaratteristiche[mov.id_caratteristica] || "Caricamento..."}</td>
                 <td>{mov.quantita}</td>
                 <td>{mov.id_tipo === 1 ? 'Carico' : 'Scarico'}</td>
                 <td>{mov.prezzo}</td>
