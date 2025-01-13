@@ -35,8 +35,8 @@
 }
 
 .dashboard-item:hover {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #bbff00dc;
+    color: #fd0808;
     border-color: #007bff;
 }
 
