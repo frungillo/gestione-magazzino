@@ -6,6 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { getCaratteristiche, deleteCaratteristica, isUsedCaratteristica } from '../services/api';
 import EditCaratteristica from './EditCaratteristica';
 import { Link } from 'react-router-dom';
+import { faTags } from '@fortawesome/free-solid-svg-icons';
 import '../styles/CaratteristicheArticolo.css';
 
 const CaratteristicheArticolo = () => {
@@ -69,17 +70,19 @@ const CaratteristicheArticolo = () => {
 
     return (
         <div className="container">
-            <h2>Gestione Caratteristiche Articoli</h2>
-            <div className="header-buttons">
-                <button
-                    className="btn btn-success add-characteristic-button"
-                    onClick={handleAddCaratteristica}
-                >
-                    Aggiungi Caratteristica
-                </button>
-                <Link to="/dashboard" className="btn btn-primary dashboard-button">
-                    Dashboard
-                </Link>
+            <div className="header">
+                <h2><FontAwesomeIcon icon={faTags}/><span>  </span>Gestione Caratteristiche Articoli</h2>
+                <div className="header-buttons">
+                    <button
+                        className="btn btn-success add-characteristic-button"
+                        onClick={handleAddCaratteristica}
+                    >
+                        Aggiungi Caratteristica
+                    </button>
+                    <Link to="/dashboard" className="btn btn-primary dashboard-button">
+                        Dashboard
+                    </Link>
+                </div>
             </div>
             <table className="table table-striped">
                 <thead>
