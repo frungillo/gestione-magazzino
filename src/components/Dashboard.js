@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import '../styles/Dashboard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsTurnToDots, faBox, faExchangeAlt, faTags } from '@fortawesome/free-solid-svg-icons';
+import logo_200 from "../images/logo_200.png";
 
 const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <h2 className="dashboard-title">Dashboard</h2>
+      <img src={logo_200} alt='Logo' />
       <div className="dashboard-menu">
         <Link to="/articoli" className="dashboard-item">
           <FontAwesomeIcon icon={faBox} className="dashboard-icon" />
