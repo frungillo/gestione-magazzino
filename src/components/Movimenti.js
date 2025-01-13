@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from '../services/base';
 import ArticoloSelector from './ArticoloSelector';
+import { Link } from 'react-router-dom';
 
 const Movimentazione = () => {
   const [movimentazioni, setMovimentazioni] = useState([]);
@@ -208,6 +209,9 @@ const Movimentazione = () => {
         </div>
       )}
       <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
+      <Link to="/dashboard" className="btn btn-primary dashboard-button">
+            Dashboard
+          </Link>
       <form onSubmit={handleSubmit} className="form">
       <div className="form-group">
           <label>Tipo di Movimentazione:</label>
