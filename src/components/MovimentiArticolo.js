@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles//MovimentiArticolo.css"; // Stile del popup
 import { getMovimentiArticolo } from "../services/api";
 
+
 const MovimentiArticolo = ({ articolo, authToken, onClose }) => {
     const [movimenti, setMovimenti] = useState([]);
     const [loading, setLoading] = useState(true);

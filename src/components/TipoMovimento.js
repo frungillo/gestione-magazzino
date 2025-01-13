@@ -3,7 +3,7 @@ import '../styles/TipoMovimento.css';
 import { Link } from 'react-router-dom';
 import { getTipoMovimento } from '../services/api'; // Usa il servizio importato
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRightToBracket, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightToBracket, faArrowRightFromBracket,faArrowsTurnToDots } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -38,7 +38,7 @@ const TipoMovimento = () => {
     return (
         <div className="tipo-movimento-container">
             <div className="header-row">
-                <h2>Tipi di Movimento</h2>
+                <h2><FontAwesomeIcon icon={faArrowsTurnToDots}/><span>  </span>Tipi di Movimento</h2>
                 <Link to="/dashboard" className="btn btn-primary dashboard-button">
                     Dashboard
                 </Link>

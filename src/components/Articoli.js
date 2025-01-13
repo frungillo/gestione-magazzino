@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faBoxes, faTrash, faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faBoxes, faTrash, faRightLeft,faBox} from '@fortawesome/free-solid-svg-icons';
 import 'react-tooltip/dist/react-tooltip.css';
 import Barcode from 'react-barcode';
 import { Tooltip } from 'react-tooltip';
@@ -110,7 +110,7 @@ const Articoli = () => {
   return (
     <div className="container">
       <div className="header">
-        <h2>Gestione Articoli</h2>
+        <h2><FontAwesomeIcon icon={faBox} /><span>   Gestione Articoli</span></h2>
         <div className="header-buttons">
           <div className="filter-section">
             <label>
