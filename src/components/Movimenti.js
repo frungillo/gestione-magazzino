@@ -147,7 +147,7 @@ const Movimentazione = () => {
 
   const decodeArticolo = async (id_articolo) => {
     if (descrizioniArticoli[id_articolo]) {
-      // Se la descrizione è già in stato, la restituiamo
+      // Se la descrizione ï¿½ giï¿½ in stato, la restituiamo
       return descrizioniArticoli[id_articolo];
     }
 
@@ -174,7 +174,7 @@ const Movimentazione = () => {
 
   const decodeCaratteristica = async (id_caratteristica) => {
     if (descrizioniCaratteristiche[id_caratteristica]) {
-      // Se la descrizione è già in stato, la restituiamo
+      // Se la descrizione ï¿½ giï¿½ in stato, la restituiamo
       return descrizioniCaratteristiche[id_caratteristica];
     }
 
@@ -208,10 +208,12 @@ const Movimentazione = () => {
           <button onClick={() => setErrorMessage('')} className="close-modal">Chiudi</button>
         </div>
       )}
-      <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
-      <Link to="/dashboard" className="btn btn-primary dashboard-button">
-            Dashboard
-          </Link>
+      <div className="header">
+        <h2><FontAwesomeIcon icon={faExchangeAlt} /> Gestione Movimentazione Articoli</h2>
+        <Link to="/dashboard" className="btn btn-primary dashboard-button">
+              Dashboard
+            </Link>
+      </div>
       <form onSubmit={handleSubmit} className="form">
       <div className="form-group">
           <label>Tipo di Movimentazione:</label>
